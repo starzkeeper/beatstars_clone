@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{ post.name }} - {{ post.author }}
+{% endblock %}
+
+{% block content %}
+<ul>
+    <img src="{{ post.cover.url }}">
+    <li><a>{{ post.name }}</a></li>
+    <li>{{ post.author }}</li>
+    <li>{{ post.price }} руб.</li>
+    {% if post.description %}
+        <li>{{ post.description }}</li>
+    {% endif %}
+    <li>{{ post.temp }}</li>
+    <li><audio controls>
+        <source src="{{ post.file.url }}" type="audio/mp3">
+    </audio></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+
+</ul>
+
+
+
+
+
+{% endblock %}

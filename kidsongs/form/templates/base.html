@@ -1,0 +1,28 @@
+{% load static %}
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" type="text/css" rel="stylesheet">
+</head>
+<body>
+  <ul class="sidebar-nav">
+
+
+   {% if user.is_authenticated %}
+     <li>User: {{ user.get_username }}</li>
+        <form action="{% url 'logout' %}" method="post">
+            {% csrf_token %}
+            <button type="submit">Выйти</button>
+        </form>
+
+   {% else %}
+     <li><a href="{% url 'login'%}?next={{request.path}}">Login</a></li>
+   {% endif %}
+  </ul>
+    {% block content %}
+    {% endblock %}
+</body>
+</html>

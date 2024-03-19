@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    kidsongs
+{% endblock %}
+
+{% block content %}
+          {% load search %}
+          {% url 'search:songs' as songs_search_url %}
+          {% url 'search:author' as author_search_url %}
+
+          {% append_query_to_url songs_search_url as songs_search_url_with_query %}
+          {% append_query_to_url author_search_url as author_search_url_with_query %}
+
+          {% search_field search %}
+
+          {% block search_result %}
+            {% found_objects songs_results songs_results_count 'Songs' 'Show all songs' songs_search_url_with_query  %}
+            {% found_objects author_results author_results_count 'Authors' 'Show all authors' author_search_url_with_query  %}
+          {% endblock %}
+{% endblock %}

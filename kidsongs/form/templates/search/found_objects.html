@@ -1,0 +1,42 @@
+{% load i18n %}
+
+<div class="card box-shadow m-2">
+  <div class="card-header">{{ objects_title }} <span class="badge badge-primary">{{ results_count }}</span>
+  </div>
+    {% if results|length > 0 %}
+      {% for obj in results %}
+        {# Songs #}
+        {% if obj.get_class == 'Songs' %}
+        <div class="song-card">
+            <div class="song-title">{{ obj.name }}</div>
+            <div class="song-author">{{ obj.author }}</div>
+            <div class="song-cover">
+              <img src="{{ obj.cover.url }}" alt="{{ obj.name }} Cover">
+            </div>
+            <div class="song-details">
+              <p>{{ obj.text }}</p>
+              <p>Temp: {{ obj.temp }}</p>
+              <p>Ton: {{ obj.ton }}</p>
+              {% if obj.hashtags %}
+                <p>Hashtags: {{ obj.hashtags }}</p>
+              {% endif %}
+
+            </div>
+            <div class="song-download">
+              <a href="{{ obj.get_absolute_url }}" class="btn btn-primary">Download</a>
+            </div>
+          </div>
+        {% elif obj.get_class == 'Author' %}
+          {# Author #}
+          <div class="author-card">
+            <div class="author-name">{{ obj.name }}</div>
+          </div>
+        {% endif %}
+      {% endfor %}
+      <div class="card-footer border-0"><a href="{{ search_url }}" class="btn btn-sm btn-outline-secondary">{{ all_search_message }}</a></div>
+    {% else %}
+      <div class="card-body">
+        {% trans 'Nothing found' %}
+      </div>
+    {% endif %}
+</div>

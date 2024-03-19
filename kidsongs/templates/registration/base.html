@@ -1,0 +1,24 @@
+{% load static %}
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+</head>
+<body>
+  <ul class="sidebar-nav">
+      <form class="col-12 col-lg-auto mb-2 mb-lg-0 me-lg-auto" role="search" method="get" action="{% url 'search' %}">
+        <input type="search" class="form-control" placeholder="Search..." aria-label="Search" name='do' autocomplete="off" id="search">
+      </form>
+
+   {% if user.is_authenticated %}
+     <li>User: {{ user.get_username }}</li>
+     <li><a href="{% url 'logout'%}?next={{request.path}}">Logout</a></li>
+   {% else %}
+     <li><a href="{% url 'login'%}?next={{request.path}}">Login</a></li>
+   {% endif %}
+  </ul>
+    {% block content %}
+    {% endblock %}
+</body>
+</html>

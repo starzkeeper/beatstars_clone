@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    kidsongs
+{% endblock %}
+
+{% block content %}
+    <h1>Главная страница</h1>
+    <ul>
+        {% for obj in object_list %}
+        <img src="{{ obj.cover.url }}">
+        <li><a>{{ obj.name }}</a></li>
+        <li>{{ obj.author }}</li>
+        <li><audio controls>
+            <source src="{{ obj.file.url }}" type="audio/mp3">
+        </audio></li>
+        <p class="link-read-post"><a href="{{ obj.get_absolute_url }}">Купить</a></p>
+        {% endfor %}
+    </ul>
+
+<p>Посетителей: {{ num_visits }}</p>
+{% endblock %}

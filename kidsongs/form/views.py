@@ -35,9 +35,12 @@ class SearchView(View):
 
     def get(self, request, *args, **kwargs):
         query = request.GET.get('search', None)
-        songs_results = Songs.objects.annotate(
-            similarity=TrigramSimilarity('name', query),
-        ).filter(similarity__gt=0.3).order_by('-similarity')
+        songs_results = Songs.objects.filter(search_vector=query)
+
+        # songs_results = Songs.objects.annotate(
+        #     similarity=TrigramSimilarity('name', 'flight club'),
+        # ).filter(similarity__gt=0.3).order_by('-similarity')
+
         author_results = Author.objects.filter(search_vector=query)
 
         return render(

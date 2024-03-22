@@ -1,9 +1,13 @@
+from django.contrib.auth.decorators import login_required
 from django.contrib.postgres.search import TrigramSimilarity
 from django.shortcuts import render
+from django.urls import reverse_lazy
 from django.views import View
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, CreateView
 from rest_framework import generics
-from .models import Songs, Author
+
+from .forms import RegisterForm
+from .models import Songs, User
 from .serializers import SongsSerializer
 
 
@@ -41,7 +45,7 @@ class SearchView(View):
         #     similarity=TrigramSimilarity('name', 'flight club'),
         # ).filter(similarity__gt=0.3).order_by('-similarity')
 
-        author_results = Author.objects.filter(search_vector=query)
+        author_results = User.objects.filter(search_vector=query)
 
         return render(
             request=request,
@@ -54,6 +58,21 @@ class SearchView(View):
                 'author_results_count': author_results.count(),
             }
         )
+
+
+@login_required
+def profile_view(request):
+    return render(request, 'reg/profile.html')
+
+
+class RegisterView(CreateView):
+    form_class = RegisterForm
+    template_name = 'reg/register.html'
+    success_url = reverse_lazy('profile')
+
+    def form_valid(self, form):
+        form.save()
+        return super().form_valid(form)
 
 
 # Представление API

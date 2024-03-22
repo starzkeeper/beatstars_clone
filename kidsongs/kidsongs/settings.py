@@ -139,3 +139,5 @@ DJANGORESIZED_DEFAULT_NORMALIZE_ROTATION = True
 LOGIN_REDIRECT_URL = '/'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # During development only
+
+AUTH_USER_MODEL = 'form.User'

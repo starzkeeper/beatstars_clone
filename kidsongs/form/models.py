@@ -7,12 +7,13 @@ from django.db.models.signals import post_delete, post_save
 from django.dispatch import receiver
 from django.urls import reverse
 from django_resized import ResizedImageField
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, AbstractUser
+from django.core.validators import FileExtensionValidator
 
 
 # Авторы
-class Author(models.Model):
-    name = models.CharField(max_length=30)
+class User(AbstractUser):
+    photo = models.ImageField(upload_to='users/%Y/%m/%d/', blank=True, null=True)
 
     search_vector = SearchVectorField(null=True, blank=True)
 
@@ -20,11 +21,11 @@ class Author(models.Model):
         indexes = [GinIndex(fields=["search_vector", ]), ]
 
     def __str__(self):
-        return self.name
+        return self.username
 
     def update_search_vector(self):
-        qs = Author.objects.filter(pk=self.pk)
-        qs.update(search_vector=SearchVector('name'))
+        qs = User.objects.filter(pk=self.pk)
+        qs.update(search_vector=SearchVector('username'))
 
     @classmethod
     def get_class(cls):
@@ -34,8 +35,9 @@ class Author(models.Model):
 # Инструменталы
 class Songs(models.Model):
     name = models.CharField(max_length=21)
-    author = models.ForeignKey(Author, on_delete=models.CASCADE)
-    file = models.FileField(upload_to='songs/')
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    file = models.FileField(upload_to='songs/', validators=[FileExtensionValidator(allowed_extensions=
+                                                                                   ['mp3', 'wav'])])
     cover = ResizedImageField(upload_to='covers/', size=[225, 225], default='covers/default.png')
     text = models.TextField(default=None, blank=True)
     temp = models.PositiveSmallIntegerField(default=0)
@@ -87,6 +89,6 @@ def delete_song_files(sender, instance, **kwargs):
 
 # После создания или изменения объекта пересоздается search_vector
 @receiver(post_save, sender=Songs)
-@receiver(post_save, sender=Author)
+@receiver(post_save, sender=User)
 def update_search_vector(sender, instance, created, update_fields, **kwargs):
     instance.update_search_vector()

@@ -26,10 +26,10 @@
               <a href="{{ obj.get_absolute_url }}" class="btn btn-primary">Download</a>
             </div>
           </div>
-        {% elif obj.get_class == 'Author' %}
+        {% elif obj.get_class == 'User' %}
           {# Author #}
           <div class="author-card">
-            <div class="author-name">{{ obj.name }}</div>
+            <div class="author-name">{{ obj.username }}</div>
           </div>
         {% endif %}
       {% endfor %}

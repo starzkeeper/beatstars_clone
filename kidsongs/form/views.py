@@ -1,12 +1,13 @@
 from django.contrib.auth.decorators import login_required
-from django.contrib.postgres.search import TrigramSimilarity
-from django.shortcuts import render
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Count
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import ListView, DetailView, CreateView
 from rest_framework import generics
 
-from .forms import RegisterForm
+from .forms import RegisterForm, AddSongForm
 from .models import Songs, User
 from .serializers import SongsSerializer
 
@@ -15,6 +16,7 @@ from .serializers import SongsSerializer
 class Home(ListView):
     model = Songs
     template_name = 'index.html'
+    ordering = ['-id']
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -62,7 +64,10 @@ class SearchView(View):
 
 @login_required
 def profile_view(request):
-    return render(request, 'reg/profile.html')
+    return render(request, 'reg/profile.html', context={'username': request.user,
+                                                        'count_beats':
+                                                            Songs.objects.filter(author=request.user).aggregate(
+                                                                song_count=Count('name'))['song_count']})
 
 
 class RegisterView(CreateView):
@@ -73,6 +78,17 @@ class RegisterView(CreateView):
     def form_valid(self, form):
         form.save()
         return super().form_valid(form)
+
+
+class AddSong(LoginRequiredMixin, CreateView):
+    form_class = AddSongForm
+    template_name = 'addsong.html'
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+
 
 
 # Представление API

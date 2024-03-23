@@ -13,6 +13,8 @@
 
    {% if user.is_authenticated %}
      <li>User: {{ user.get_username }}</li>
+      <li><a href="{% url 'profile'%}">Profile</a></li>
+      <li><a href="{% url 'add_song' %}">Загрузить трек</a></li>
         <form action="{% url 'logout' %}" method="post">
             {% csrf_token %}
             <button type="submit">Выйти</button>
@@ -20,6 +22,7 @@
 
    {% else %}
      <li><a href="{% url 'login'%}">Login</a></li>
+      <li><a href="{% url 'register'%}">Register</a></li>
    {% endif %}
   </ul>
     {% block content %}

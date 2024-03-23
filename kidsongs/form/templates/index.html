@@ -6,6 +6,15 @@
 
 {% block content %}
     <h1>Главная страница</h1>
+    <form method="get" class="my-3 px-3" action="{% url 'search' %}">
+  <div class="input-group bmd-form-group pt-0">
+  {% load i18n %}
+    <input class="form-control" name="search" placeholder="{% trans 'Search' %}" value="{{ query_value }}" title="" type="text">
+    <div class="input-group-append">
+      <button type="submit" class="btn btn-dark">Поиск</button>
+    </div>
+  </div>
+</form>
     <ul>
         {% for obj in object_list %}
         <img src="{{ obj.cover.url }}">

@@ -31,6 +31,9 @@ class User(AbstractUser):
     def get_class(cls):
         return cls.__name__
 
+    def get_username(self):
+        return self.username
+
 
 # Инструменталы
 class Songs(models.Model):
